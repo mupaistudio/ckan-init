@@ -1,0 +1,47 @@
+좋아, 이제 로컬라이징의 다음 항목인 **042. 공식폰트 지정방법**, **043. UI 다국화**를 정리할게.  
+기존 방식대로 도커 대상, 파일, 작업유형을 기준으로 구성했어.
+
+---
+
+## ✅ 042. 공식폰트 지정방법 (Phetsarath 등)
+
+### 1. 시스템 폰트 설치
+- **대상**: CKAN 프론트엔드가 렌더링되는 컨테이너 (보통 `ckan`, `nginx`)  
+- **파일 위치**: `ckan/Dockerfile` 또는 `nginx/Dockerfile`  
+- **작업 유형**: **추가**
+- **예시 내용**:
+  ```dockerfile
+  RUN apt-get update && apt-get install -y fonts-lao
+  ```
+
+  또는 사용자가 직접 `.ttf` 파일을 복사하려면:
+  ```dockerfile
+  COPY fonts/PhetsarathOT.ttf /usr/share/fonts/truetype/
+  RUN fc-cache -f -v
+  ```
+
+---
+
+### 2. CSS에 폰트 적용
+- **대상**: CKAN 테마  
+- **파일 위치**: `ckanext-<theme>/public/css/style.css`  
+- **작업 유형**: **수정 또는 추가**
+- **예시 내용**:
+  ```css
+  body {
+    font-family: 'Phetsarath OT', sans-serif;
+  }
+  ```
+
+---
+
+### 3. 테마 적용 확인
+- **대상**: CKAN 설정  
+- **파일 위치**: `.env` 또는 `ckan.ini`  
+- **작업 유형**: **수정**
+- **예시**:
+  ```env
+  CKAN__PLUGINS="mytheme ... 기타 플러그인"
+  ```
+
+---
